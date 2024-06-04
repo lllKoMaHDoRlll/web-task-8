@@ -100,6 +100,7 @@ function db_pager_query() {
 }
 
 function db_array() {
+  global $db;
   $args = func_get_args();
   $key = array_shift($args);
   $query = array_shift($args);
@@ -117,4 +118,20 @@ function db_array() {
     }
   }
   return $r;
+}
+
+function write_new_user($login, $password_hash) {
+  global $db;
+  try {
+      $stmt = $db->prepare("INSERT INTO users (login, password_hash) VALUES (:login, :password_hash)");
+      $stmt->bindParam('login', $login);
+      $stmt->bindParam('password_hash', $password_hash);
+      $stmt->execute();
+
+      $user_id = $db->lastInsertId();
+      return $user_id;
+  }
+  catch (PDOException $e) {
+    return -1;
+  }
 }
