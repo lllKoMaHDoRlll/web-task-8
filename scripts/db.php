@@ -135,3 +135,36 @@ function write_new_user($login, $password_hash) {
     return -1;
   }
 }
+
+function save_form_submission($user_id, $submission)
+{
+  global $db;
+  try {
+    $db->beginTransaction();
+    $stmt = $db->prepare("INSERT INTO application 
+        (user_id, name, phone, email, bdate, gender, bio) 
+        VALUES (:user_id, :name, :phone, :email, :bdate, :gender, :bio);");
+    $stmt->bindParam('user_id', $user_id);
+    $stmt->bindParam('name', $submission['name']);
+    $stmt->bindParam('phone', $submission['phone']);
+    $stmt->bindParam('email', $submission['email']);
+    $stmt->bindParam('bdate', $submission['date']);
+    $gender = $submission['gender'] == "male" ? '1' : '0';
+    $stmt->bindParam('gender', $gender);
+    $stmt->bindParam('bio', $submission['bio']);
+    $stmt->execute();
+
+    $submission_rowid = $db->lastInsertId();
+    foreach ($submission["fpls"] as $fpl) {
+      $stmt = $db->prepare(sprintf("INSERT INTO fpls (parent_id, fpl) VALUES (%s, :fpl);", $submission_rowid));
+      $stmt->bindParam('fpl', $fpl);
+      $stmt->execute();
+    }
+
+    $db->commit();
+    return true;
+  } catch (Exception $e) {
+    $db->rollback();
+    return false;
+  }
+}
