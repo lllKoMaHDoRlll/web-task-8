@@ -128,6 +128,12 @@ function url($addr = '', $params = array()) {
   return $r;
 }
 
+function created() {
+  return array(
+    'headers' => array('HTTP/1.1 201 Created')
+  );
+}
+
 // Возвращает редирект 302 с заголовком Location.
 function redirect($l = NULL) {
   if (is_null($l)) {
@@ -137,6 +143,12 @@ function redirect($l = NULL) {
     $location = 'http://' . $_SERVER['HTTP_HOST'] . url($l);
   }
   return array('headers' => array('Location' => $location));
+}
+
+function bad_request() {
+  return array(
+    'headers' => array('HTTP/1.1 400 Bad Request')
+  );
 }
 
 // Возвращает 403.
@@ -152,6 +164,12 @@ function not_found() {
   return array(
     'headers' => array('HTTP/1.1 404 Not Found'),
     'entity' => theme('404'),
+  );
+}
+
+function internal_server_error() {
+  return array(
+    'headers' => array('HTTP/1.1 500 Internal Server Error')
   );
 }
 
