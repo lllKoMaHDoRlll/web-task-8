@@ -8,6 +8,7 @@
 
 // Диспатчер. Делает запрос $request в соответствии со структурой $urlconf.
 function init($request = array(), $urlconf = array()) {
+  session_start();
   // Массив HTTP-ответа.
   $response = array();
 
