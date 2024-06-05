@@ -3,8 +3,42 @@
 include_once('scripts/utils.php');
 include_once('scripts/db.php');
 
-function form_api_get() {
+function form_api_get($request, $user_id) {
+    if (intval($user_id) != $_SESSION['user_id']) {
+        $result = access_denied();
+        $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        return $result;
+    }
+
+    $submission = get_user_form_submission($user_id);
+    if (!$submission) {
+        $result = bad_request();
+        $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        return $result;
+    }
+    $submission_id = $submission[0]["id"];
+
+    $values = array();
+
+    $values["name"] = sanitize($submission[0]['name']);
+    $values["phone"] = sanitize($submission[0]['phone']);
+    $values["email"] = sanitize($submission[0]['email']);
+    $values["date"] = sanitize($submission[0]['bdate']);
+    $values["gender"] = sanitize($submission[0]['gender']);
+    $values["bio"] = sanitize($submission[0]['bio']);
     
+    $fpls = get_user_fpls($submission_id);
+    if (!$fpls) {
+        $result = bad_request();
+        $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        return $result;
+    }
+    $values["fpls"] = sprintf("@%s@", implode("@", array_map('sanitize', $fpls)));
+
+    return array(
+        'headers' => array('Content-Type' => 'application/json'),
+        'entity' => json_encode($values)
+    );
 }
 
 function form_api_post($request) {
@@ -71,6 +105,6 @@ function form_api_put($request, $user_id) {
         return $result;
     }
     return array(
-        'headers' => array('Location' => '/')
+        'headers' => array('Location' => '/user/' . $user_id)
     );
 }
