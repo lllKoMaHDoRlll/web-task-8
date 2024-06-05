@@ -133,3 +133,29 @@ function get_password_hash($password) {
 function generate_csrf_token() {
     return md5(uniqid(mt_rand(), true));
 }
+
+function get_user_db_data($login, $password_hash)
+{
+    global $db;
+    try {
+        $stmt = $db->prepare('SELECT user_id FROM users WHERE
+        login = :login AND password_hash = :password_hash');
+        $stmt->bindParam('login', $login);
+        $stmt->bindParam('password_hash', $password_hash);
+        $stmt->execute();
+        
+        return $stmt->fetchAll();
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+function get_user_id($login, $password_hash) {
+    $result = get_user_db_data($login, $password_hash);
+    if (!$result || count($result) == 0) {
+        return -1;
+    }
+    else {
+        return $result[0]['user_id'];
+    }
+}
