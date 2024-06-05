@@ -168,3 +168,44 @@ function save_form_submission($user_id, $submission)
     return false;
   }
 }
+
+function update_sumbission_data($user_id, $submission) {
+  global $db;
+  try {
+      $db->beginTransaction();
+      $stmt = $db->prepare("UPDATE application 
+      SET name = :name, phone = :phone, email = :email, bdate = :bdate, gender = :gender, bio = :bio
+      WHERE user_id = :user_id");
+      $stmt->bindParam('user_id', $user_id);
+      $stmt->bindParam('name', $submission['name']);
+      $stmt->bindParam('phone', $submission['phone']);
+      $stmt->bindParam('email', $submission['email']);
+      $stmt->bindParam('bdate', $submission['date']);
+      $gender = $submission["gender"] == "male" ? '1' : '0';
+      $stmt->bindParam('gender', $gender);
+      $stmt->bindParam('bio', $submission['bio']);
+      $stmt->execute();
+
+      $stmt = $db->prepare("SELECT id from application WHERE user_id = :user_id");
+      $stmt->bindParam("user_id", $user_id);
+      $stmt->execute();
+      $row_id = $stmt->fetchAll()[0]['id'];
+
+      $stmt = $db->prepare("DELETE FROM fpls WHERE parent_id = :parent_id");
+      $stmt->bindParam('parent_id', $row_id);
+      $stmt->execute();
+
+      foreach ($submission['fpls'] as $fpl) {
+          $stmt = $db->prepare(sprintf("INSERT INTO fpls (parent_id, fpl) VALUES (%s, :fpl);", $row_id));
+          $stmt->bindParam('fpl', $fpl);
+          $stmt->execute();
+      }
+
+      $db->commit();
+      return true;
+  }
+  catch (PDOException $e) {
+      $db->rollback();
+      return false;
+  }
+}
