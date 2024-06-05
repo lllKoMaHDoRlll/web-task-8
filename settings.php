@@ -35,6 +35,7 @@ $urlconf = array(
   '/^user\/(?<user_id>\d+)$/' => array('module' => 'form_front'),
   '/^login$/' => array('module' => 'login_front'),
   '/^api\/form$/' => array('module' => 'form_api'),
+  '/^api\/form\/(?<user_id>\d+)$/' => array('module' => 'form_api'),
   '/^api\/login$/' => array('module' => 'login_api'),
   // '/^admin$/' => array('module' => 'admin', 'auth' => 'auth_basic'),
   // '/^admin\/(?<id>\d+)$/' => array('module' => 'admin', 'auth' => 'auth_basic'),
