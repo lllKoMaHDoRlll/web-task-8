@@ -209,3 +209,33 @@ function update_sumbission_data($user_id, $submission) {
       return false;
   }
 }
+
+function get_user_form_submission($user_id)
+{
+  global $db;
+  try {
+    $stmt = $db->prepare('SELECT * FROM application WHERE
+        user_id = :user_id');
+    $stmt->bindParam('user_id', $user_id);
+    $stmt->execute();
+
+    return $stmt->fetchAll();
+  } catch (Exception $e) {
+    return false;
+  }
+}
+
+function get_user_fpls($submission_id)
+{
+  global $db;
+  try {
+    $stmt = $db->prepare('SELECT fpl FROM fpls WHERE
+        parent_id = :parent_id');
+    $stmt->bindParam('parent_id', $submission_id);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
+  } catch (Exception $e) {
+    return false;
+  }
+}
