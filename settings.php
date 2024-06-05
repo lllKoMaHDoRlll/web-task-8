@@ -26,11 +26,18 @@ $conf = array(
   'admin_mail' => 'sin@kubsu.ru',
 );
 
+include_once('db_data.php');
+$conf = array_merge($conf, $db_data);
+
 // Определения ресурсов для диспатчера.
 $urlconf = array(
-  '' => array('module' => 'front'),
-  '/^admin$/' => array('module' => 'admin', 'auth' => 'auth_basic'),
-  '/^admin\/(?<id>\d+)$/' => array('module' => 'admin', 'auth' => 'auth_basic'),
+  '' => array('module' => 'form_front'),
+  '/^user\/(?<user_id>\d+)$/' => array('module' => 'form_front'),
+  '/^login$/' => array('module' => 'login_front'),
+  '/^api\/form$/' => array('module' => 'form_api'),
+  '/^api\/login$/' => array('module' => 'login_api'),
+  // '/^admin$/' => array('module' => 'admin', 'auth' => 'auth_basic'),
+  // '/^admin\/(?<id>\d+)$/' => array('module' => 'admin', 'auth' => 'auth_basic'),
 /*  '/^order\/(\d+)$/' => array('module' => 'order', 'auth' => 'auth_db_basic'),
   '/^order\/(\d+)\/add$/' => array('module' => 'order_add', 'auth' => 'auth_db_basic'),
   '/^order\/(\d+)\/add\/(\d+)$/' => array('module' => 'order_add', 'auth' => 'auth_db_basic'),
