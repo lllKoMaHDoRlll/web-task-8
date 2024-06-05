@@ -51,5 +51,26 @@ function form_api_post($request) {
 }
 
 function form_api_put($request, $user_id) {
-    echo "1234";
+    if (!isset($_POST['user_id']) || $user_id != $_POST['user_id'] || $user_id != $_SESSION['user_id'] || $_POST['user_id'] != $_SESSION['user_id']) {
+        $result = access_denied();
+        $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        return $result;
+    }
+
+    $values = parse_form_submission_from_post();
+    if (!validate_fields_and_set_cookies($values)) {
+        $result = bad_request();
+        $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        return $result;
+    }
+
+    $update_status = update_sumbission_data($user_id, $values);
+    if (!$update_status) {
+        $result = internal_server_error();
+        $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        return $result;
+    }
+    return array(
+        'headers' => array('Location' => '/')
+    );
 }
