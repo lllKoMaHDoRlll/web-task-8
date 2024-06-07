@@ -22,7 +22,7 @@ include_once("scripts/utils.php");
     </section>
     <section id="form" class="container">
         <h2>Form</h2>
-        <form action="/api/form" method="POST">
+        <form action="/api/form" method="POST" id="submission-form">
             <?php
                 print isset($_SESSION['csrf_token']) ? '<input type="hidden" name="csrf_token" value="' . $_SESSION['csrf_token'] . '">' : '';
                 print isset($_SESSION['user_id'])? '<input type="hidden" name="user_id" value="' . $_SESSION['user_id'] . '">' : '';
