@@ -19,14 +19,14 @@ function parse_submission_from_cookies() {
 
 function parse_form_submission_from_post() {
     $submission = array();
-    $submission['name'] = sanitize($_POST['field-name']);
-    $submission['phone'] = sanitize($_POST['field-phone']);
-    $submission['email'] = sanitize($_POST['field-email']);
-    $submission['date'] = sanitize($_POST['field-date']);
-    $submission['gender'] = sanitize($_POST['field-gender']);
-    $submission['bio'] = sanitize($_POST['field-bio']);
-    $submission['fpls'] = array_map('sanitize', $_POST['field-pl']);
-    $submission['acception'] = sanitize($_POST['check-accept']);
+    $submission['name'] = isset($_POST['field-name']) ? sanitize($_POST['field-name']) : "";
+    $submission['phone'] = isset($_POST['field-phone']) ? sanitize($_POST['field-phone']) : "";
+    $submission['email'] = isset($_POST['field-email']) ? sanitize($_POST['field-email']) : "";
+    $submission['date'] = isset($_POST['field-date']) ? sanitize($_POST['field-date']) : "";
+    $submission['gender'] = isset($_POST['field-gender']) ? sanitize($_POST['field-gender']) : "";
+    $submission['bio'] = isset($_POST['field-bio']) ? sanitize($_POST['field-bio']) : "";
+    $submission['fpls'] = isset($_POST['field-pl']) ? array_map('sanitize', $_POST['field-pl']) : array();
+    $submission['acception'] = isset($_POST['check-accept']) ? sanitize($_POST['check-accept']) : "";
 
     return $submission;
 }
