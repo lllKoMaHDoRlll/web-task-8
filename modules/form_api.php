@@ -49,7 +49,9 @@ function form_api_post($request) {
     $values = parse_form_submission_from_post();
     if (!validate_fields_and_set_cookies($values)) {
         $result = bad_request();
-        $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        if (!isset($request['get']['js'])) {
+            $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        }
         return $result;
     }
 
@@ -65,7 +67,9 @@ function form_api_post($request) {
     $user_id = write_new_user($user_login, $user_password_hash);
     if ($user_id == -1) {
         $result = internal_server_error();
-        $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        if (!isset($request['get']['js'])) {
+            $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        }
         return $result;
     }
 
@@ -75,36 +79,62 @@ function form_api_post($request) {
     $is_written = save_form_submission($user_id, $values);
     if (!$is_written) {
         $result = internal_server_error();
-        $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        if (!isset($request['get']['js'])) {
+            $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        }
         return $result;
     }
-    return array(
-        'headers' => array('Content-Type' => 'application/json', 'Location' => '/'),
-        'entity' => json_encode($user_data)
-    );
+
+    if (isset($request['get']['js'])) {
+        return array(
+            'headers' => array('Content-Type' => 'application/json'),
+            'entity' => json_encode($user_data)
+        );
+    }
+    else {
+        return array(
+            'headers' => array('Content-Type' => 'application/json', 'Location' => '/'),
+            'entity' => json_encode($user_data)
+        );
+    }
 }
 
 function form_api_put($request, $user_id) {
     if (!isset($_POST['user_id']) || $user_id != $_POST['user_id'] || $user_id != $_SESSION['user_id'] || $_POST['user_id'] != $_SESSION['user_id']) {
         $result = access_denied();
-        $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        if (!isset($request['get']['js'])) {
+            $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        }
         return $result;
     }
 
     $values = parse_form_submission_from_post();
     if (!validate_fields_and_set_cookies($values)) {
         $result = bad_request();
-        $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        if (!isset($request['get']['js'])) {
+            $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        }
         return $result;
     }
 
     $update_status = update_sumbission_data($user_id, $values);
     if (!$update_status) {
         $result = internal_server_error();
-        $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        if (!isset($request['get']['js'])) {
+            $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
+        }
         return $result;
     }
-    return array(
-        'headers' => array('Location' => '/user/' . $user_id)
-    );
+
+    if (!isset($request['get']['js'])) {
+        return array(
+            'headers' => array('Location' => '/user/' . $user_id)
+        );
+    }
+    else {
+        return array(
+            'headers' => array('HTTP/1.1 200 OK')
+        );
+    }
+    
 }
