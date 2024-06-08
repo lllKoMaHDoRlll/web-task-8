@@ -206,3 +206,8 @@ function parse_raw_http_request(array &$a_data)
     $a_data[$matches[0]] = $matches[1];
   }        
 }
+
+function clear_meta_data_cookies() {
+    setcookie("login", "0", 1, "/");
+    setcookie("password", "0", 1, "/");
+}
