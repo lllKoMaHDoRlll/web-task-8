@@ -207,7 +207,7 @@ function parse_raw_http_request(array &$a_data)
   }        
 }
 
-function clear_meta_data_cookies() {
+function clear_user_data_cookies() {
     setcookie("login", "0", 1, "/");
     setcookie("password", "0", 1, "/");
 }
