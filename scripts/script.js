@@ -1,6 +1,4 @@
 
-document.cookie = "is-js-enabled=1; path=/;";
-
 function sendSubmission (ev) {
     ev.preventDefault();
     const formEl = document.getElementById("submission-form");
