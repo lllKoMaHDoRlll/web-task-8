@@ -1,6 +1,7 @@
 <?php
 
 include_once("scripts/utils.php");
+include_once("scripts/db.php");
 
 function form_front_get($request, $user_id="-1") {
     if ($user_id !== "-1" && intval($user_id) !== $_SESSION['user_id']) {
