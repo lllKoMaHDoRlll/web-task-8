@@ -142,9 +142,55 @@ function areFormFieldsValid (fields) {
     return areFormFieldsValid;
 }
 
+function clearFieldErrorStyles(ev) {
+    if (ev && ev.target) {
+        ev.target.classList.remove("err_input");
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     submissionFormEl = document.getElementById("submission-form");
     if (submissionFormEl) {
         submissionFormEl.addEventListener('submit', sendSubmission);
+    }
+
+    const nameFieldEl = document.getElementsByName("field-name").length > 0 ? document.getElementsByName("field-name")[0] : null;
+    if (nameFieldEl) {
+        nameFieldEl.addEventListener("input", clearFieldErrorStyles);
+    }
+
+    const phoneFieldEl = document.getElementsByName("field-phone").length > 0 ? document.getElementsByName("field-phone")[0] : null;
+    if (phoneFieldEl) {
+        phoneFieldEl.addEventListener("input", clearFieldErrorStyles);
+    }
+
+    const emailFieldEl = document.getElementsByName("field-email").length > 0 ? document.getElementsByName("field-email")[0] : null;
+    if (emailFieldEl) {
+        emailFieldEl.addEventListener("input", clearFieldErrorStyles);
+    }
+
+    const dateFieldEl = document.getElementsByName("field-date").length > 0 ? document.getElementsByName("field-date")[0] : null;
+    if (dateFieldEl) {
+        dateFieldEl.addEventListener("input", clearFieldErrorStyles);
+    }
+
+    const genderFieldEl = document.getElementsByName("field-gender").length > 0 ? document.getElementsByName("field-gender")[0] : null;
+    if (genderFieldEl) {
+        genderFieldEl.addEventListener("input", clearFieldErrorStyles);
+    }
+
+    const plFieldEl = document.getElementsByName("field-pl[]").length > 0 ? document.getElementsByName("field-pl[]")[0] : null;
+    if (plFieldEl) {
+        plFieldEl.addEventListener("input", clearFieldErrorStyles);
+    }
+
+    const acceptionFieldEl = document.getElementsByName("check-accept").length > 0 ? document.getElementsByName("check-accept")[0] : null;
+    if (acceptionFieldEl) {
+        acceptionFieldEl.addEventListener("input", clearFieldErrorStyles);
+    }
+
+    const bioFieldEl = document.getElementsByName("field-bio").length > 0 ? document.getElementsByName("field-bio")[0] : null;
+    if (bioFieldEl) {
+        bioFieldEl.addEventListener("input", clearFieldErrorStyles);
     }
 });
