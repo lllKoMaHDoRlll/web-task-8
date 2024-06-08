@@ -46,7 +46,7 @@ function form_api_post($request) {
         return form_api_put($request, $_POST['user_id']);
     }
 
-    $values = parse_form_submission_from_post();
+    $values = parse_form_submission_from_post($_POST);
     if (!validate_fields_and_set_cookies($values)) {
         $result = bad_request();
         if (!isset($request['get']['js'])) {
@@ -100,7 +100,15 @@ function form_api_post($request) {
 }
 
 function form_api_put($request, $user_id) {
-    if (!isset($_POST['user_id']) || $user_id != $_POST['user_id'] || $user_id != $_SESSION['user_id'] || $_POST['user_id'] != $_SESSION['user_id']) {
+    if (!empty($_POST)) {
+        $post_data = $_POST;
+    }
+    else {
+        $post_data = array();
+        parse_raw_http_request($post_data);
+    }
+
+    if (!isset($post_data['user_id']) || $user_id != $post_data['user_id'] || $user_id != $_SESSION['user_id'] || $post_data['user_id'] != $_SESSION['user_id']) {
         $result = access_denied();
         if (!isset($request['get']['js'])) {
             $result['headers'] = array_merge($result['headers'], array('Location' => '/'));
@@ -108,7 +116,7 @@ function form_api_put($request, $user_id) {
         return $result;
     }
 
-    $values = parse_form_submission_from_post();
+    $values = parse_form_submission_from_post($post_data);
     if (!validate_fields_and_set_cookies($values)) {
         $result = bad_request();
         if (!isset($request['get']['js'])) {

@@ -17,16 +17,16 @@ function parse_submission_from_cookies() {
     return $values;
 }
 
-function parse_form_submission_from_post() {
+function parse_form_submission_from_post($post_data) {
     $submission = array();
-    $submission['name'] = isset($_POST['field-name']) ? sanitize($_POST['field-name']) : "";
-    $submission['phone'] = isset($_POST['field-phone']) ? sanitize($_POST['field-phone']) : "";
-    $submission['email'] = isset($_POST['field-email']) ? sanitize($_POST['field-email']) : "";
-    $submission['date'] = isset($_POST['field-date']) ? sanitize($_POST['field-date']) : "";
-    $submission['gender'] = isset($_POST['field-gender']) ? sanitize($_POST['field-gender']) : "";
-    $submission['bio'] = isset($_POST['field-bio']) ? sanitize($_POST['field-bio']) : "";
-    $submission['fpls'] = isset($_POST['field-pl']) ? array_map('sanitize', $_POST['field-pl']) : array();
-    $submission['acception'] = isset($_POST['check-accept']) ? sanitize($_POST['check-accept']) : "";
+    $submission['name'] = isset($post_data['field-name']) ? sanitize($post_data['field-name']) : "";
+    $submission['phone'] = isset($post_data['field-phone']) ? sanitize($post_data['field-phone']) : "";
+    $submission['email'] = isset($post_data['field-email']) ? sanitize($post_data['field-email']) : "";
+    $submission['date'] = isset($post_data['field-date']) ? sanitize($post_data['field-date']) : "";
+    $submission['gender'] = isset($post_data['field-gender']) ? sanitize($post_data['field-gender']) : "";
+    $submission['bio'] = isset($post_data['field-bio']) ? sanitize($post_data['field-bio']) : "";
+    $submission['fpls'] = isset($post_data['field-pl']) ? array_map('sanitize', $post_data['field-pl']) : array();
+    $submission['acception'] = isset($post_data['check-accept']) ? sanitize($post_data['check-accept']) : "";
 
     return $submission;
 }
@@ -158,4 +158,51 @@ function get_user_id($login, $password_hash) {
     else {
         return $result[0]['user_id'];
     }
+}
+
+function parse_raw_http_request(array &$a_data)
+{
+  // read incoming data
+  $input = file_get_contents('php://input');
+  
+  // grab multipart boundary from content type header
+  preg_match('/boundary=(.*)$/', $_SERVER['CONTENT_TYPE'], $matches);
+  $boundary = $matches[1];
+  
+  // split content by boundary and get rid of last -- element
+  $a_blocks = preg_split("/-+$boundary/", $input);
+  array_pop($a_blocks);
+      
+  // loop data blocks
+  foreach ($a_blocks as $id => $block)
+  {
+    if (empty($block))
+      continue;
+    
+    // you'll have to var_dump $block to understand this and maybe replace \n or \r with a visibile char
+    
+    // parse uploaded files
+    if (strpos($block, 'application/octet-stream') !== FALSE)
+    {
+      // match "name", then everything after "stream" (optional) except for prepending newlines 
+      preg_match('/name=\"([^\"]*)\".*stream[\n|\r]+([^\n\r].*)?$/s', $block, $matches);
+    }
+    // parse all other fields
+    else
+    {
+      // match "name" and optional value in between newline sequences
+      preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
+    }
+    array_shift($matches);
+    if (str_ends_with($matches[0], "[]")) {
+        $key = substr($matches[0], 0, strlen($matches[0]) - 2);
+        if (!isset($a_data[$key])) {
+            $a_data[$key] = array($matches[1]);
+        }
+        else {
+            array_push($a_data[$key], $matches[1]);
+        }
+    }
+    $a_data[$matches[0]] = $matches[1];
+  }        
 }
