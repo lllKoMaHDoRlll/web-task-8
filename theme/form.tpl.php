@@ -9,7 +9,7 @@ include_once("scripts/utils.php");
     <h1 id="name">Cofee Cat</h1>
 </header>
 <div id="content">
-    <section id="login-status-container" class="container" <?php echo isset($_COOKIE[session_name()])? '' : 'style="display: none"'; ?>>
+    <section id="login-status-container" class="container" <?php echo isset($_SESSION['user_id'])? '' : 'style="display: none"'; ?>>
         <p>
             You have been signed in as <?php echo !empty($_SESSION['login'])? $_SESSION['login'] : ''; ?>
         </p>
