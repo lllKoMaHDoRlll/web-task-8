@@ -30,25 +30,25 @@ include_once("scripts/utils.php");
             <label>Name:
                 <input name="field-name" placeholder="Your name" type="text" <?php print empty($_COOKIE["field-name-error"]) ? '' : 'class="err_input"'; ?>
                     value="<?php print $c['values']["name"] ?>">
-                <span class="err_desc" <?php print empty($_COOKIE["field-name-error"]) ? 'style="display:none;"' : '' ?>>Please fill name field correctly</span>
+                <span id="field-name-err-desc" class="err_desc" <?php print empty($_COOKIE["field-name-error"]) ? 'style="display:none;"' : '' ?>>Please fill name field correctly</span>
             </label>
 
             <label>Phone:
                 <input name="field-phone" placeholder="Your phone number" type="tel" <?php print empty($_COOKIE["field-phone-error"]) ? '' : 'class="err_input"'; ?>
                     value="<?php print $c['values']["phone"]; ?>">
-                <span class="err_desc" <?php print empty($_COOKIE["field-phone-error"]) ? 'style="display:none;"' : '' ?>>Please fill phone field correctly</span>
+                <span id="field-phone-err-desc" class="err_desc" <?php print empty($_COOKIE["field-phone-error"]) ? 'style="display:none;"' : '' ?>>Please fill phone field correctly</span>
             </label>
 
             <label>Email:
                 <input name="field-email" placeholder="Your email adress" type="email" <?php print empty($_COOKIE["field-email-error"]) ? '' : 'class="err_input"'; ?>
                     value="<?php print $c['values']['email']; ?>">
-                <span class="err_desc" <?php print empty($_COOKIE["field-email-error"]) ? 'style="display:none;"' : '' ?>>Please fill email field correctly</span>
+                <span id="field-email-err-desc" class="err_desc" <?php print empty($_COOKIE["field-email-error"]) ? 'style="display:none;"' : '' ?>>Please fill email field correctly</span>
             </label>
 
             <label>Date of birth:
                 <input name="field-date" type="date" <?php print empty($_COOKIE["field-date-error"]) ? '' : 'class="err_input"'; ?>
                     value="<?php print $c['values']["date"]; ?>">
-                <span class="err_desc" <?php print empty($_COOKIE["field-date-error"]) ? 'style="display:none;"' : '' ?>>Please fill birthday date field correctly</span>
+                <span id="field-date-err-desc" class="err_desc" <?php print empty($_COOKIE["field-date-error"]) ? 'style="display:none;"' : '' ?>>Please fill birthday date field correctly</span>
             </label>
 
             <p>Gender:</p>
@@ -58,7 +58,7 @@ include_once("scripts/utils.php");
             <label class="radio-gender">
                 <input name="field-gender" type="radio" value="female" <?php print $c['values']["gender"] == '0' ? 'checked' : ''; ?>>Female
             </label>
-            <span class="err_desc" <?php print empty($_COOKIE["field-gender-error"]) ? 'style="display:none;"' : '' ?>>Please fill gender field correctly</span>
+            <span id="field-gender-err-desc" class="err_desc" <?php print empty($_COOKIE["field-gender-error"]) ? 'style="display:none;"' : '' ?>>Please fill gender field correctly</span>
 
             <label>Favorite PL:
                 <select name="field-pl[]" multiple="multiple" <?php print empty($_COOKIE["field-pl-error"]) ? '' : 'class="err_input"'; ?>>
@@ -74,18 +74,18 @@ include_once("scripts/utils.php");
                     <option value="prolog" <?php print str_contains($c['values']["fpls"], '@prolog@') ? 'selected' : ''; ?>>Prolog</option>
                     <option value="scala" <?php print str_contains($c['values']["fpls"], '@scala@') ? 'selected' : ''; ?>>Scala</option>
                 </select>
-                <span class="err_desc" <?php print empty($_COOKIE["field-pl-error"]) ? 'style="display:none;"' : '' ?>>Please fill fpl field correctly</span>
+                <span id="field-fpls-err-desc" class="err_desc" <?php print empty($_COOKIE["field-pl-error"]) ? 'style="display:none;"' : '' ?>>Please fill fpl field correctly</span>
             </label>
 
             <label>BIO:
                 <textarea name="field-bio" <?php print empty($_COOKIE["field-bio-error"]) ? '' : 'class="err_input"'; ?>><?php print $c['values']["bio"]; ?></textarea>
-                <span class="err_desc" <?php print empty($_COOKIE["field-bio-error"]) ? 'style="display:none;"' : '' ?>>Please fill bio field correctly</span>
+                <span id="field-bio-err-desc" class="err_desc" <?php print empty($_COOKIE["field-bio-error"]) ? 'style="display:none;"' : '' ?>>Please fill bio field correctly</span>
             </label>
 
             <label id="chkbox-label">
                 <input type="checkbox" name="check-accept" value="accepted">
                 Accept
-                <span class="err_desc" <?php print empty($_COOKIE["field-accept-error"]) ? 'style="display:none;"' : '' ?>>Please accept Privacy Politics.</span>
+                <span id="field-acception-err-desc" class="err_desc" <?php print empty($_COOKIE["field-accept-error"]) ? 'style="display:none;"' : '' ?>>Please accept Privacy Politics.</span>
             </label>
 
             <label class="submit-button"><input type="submit"></label>
