@@ -5,7 +5,6 @@ function sendSubmission (ev) {
     const fields = new FormData(formEl);
     
     if (!areFormFieldsValid(fields)) {
-        alert("Fields of form are not valid!");
         return;
     }
 
@@ -25,7 +24,23 @@ function sendSubmission (ev) {
 
     request.onreadystatechange = () => {
         if (request.readyState === XMLHttpRequest.DONE) {
-            console.log(request);
+            const requestStatus = request.status;
+            if (requestStatus === 0 || (requestStatus >= 200 && requestStatus < 400)) {
+                alert("Form was sended successfully");
+                if (request.responseText && request.responseText !== "") {
+                    const user_data = JSON.parse(request.responseText);
+                    showUserData(user_data);
+                }
+            }
+            else if (requestStatus === 403) {
+                alert("Form was not sended. You were trying to access different user's submission!");
+            }
+            else if (requestStatus === 400) {
+                alert("Form was not sended. Bad request!");
+            }
+            else {
+                alert("Form was not sended.");
+            }
         }
     };
 
@@ -114,6 +129,14 @@ function areFormFieldsValid (fields) {
 function clearFieldErrorStyles(ev) {
     if (ev && ev.target) {
         ev.target.classList.remove("err_input");
+    }
+}
+
+function showUserData(user_data) {
+    loginDataContainerEl = document.getElementById("login-data-container");
+    if (loginDataContainerEl) {
+        loginDataContainerEl.children[0].innerHTML = `You can <a href='./login'>login</a> with login: ${user_data['login']} and password: ${user_data['password']}.`;
+        loginDataContainerEl.style.display = "block";
     }
 }
 
